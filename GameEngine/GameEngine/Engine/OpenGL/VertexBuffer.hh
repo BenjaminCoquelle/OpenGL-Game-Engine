@@ -24,32 +24,32 @@
 namespace OpenGLTools
 {
   /// Buffer containing on the GPU the vertex
-  class VertexBuffer
+ class VertexBuffer
   {
   private:
-    VertexBuffer(VertexBuffer const &);
-    VertexBuffer &operator=(VertexBuffer const &);
-
+	struct buffer
+	{
+		size_t size;
+		char *data;
+		buffer(size_t size, char *data) 
+		: size(size), data(data)
+		{}
+		~buffer();
+	};
   private:
-    GLuint					_idBuffer;
-    GLuint					_idIndex;
-    size_t					_nbrVertex;
-    std::vector<Attribute>	_attribute;
-	bool					_drawable;
+    GLuint _id;
+	std::vector<buffer> _buffers;
 
   public:
-    VertexBuffer(void);
-    ~VertexBuffer(void);
-
-    void addAttribute(Attribute const &attribute);
-    void clearAttributes(void);
-    void clearUniform(void);
-
-    void init(size_t nbrVertex, unsigned int *vertex = NULL);
-    void setBuffer(size_t index, byte *buffer) const;
-
-    void draw(GLenum mode) const;
-    GLuint getId() const;
+    VertexBuffer();
+    ~VertexBuffer();
+	VertexBuffer(VertexBuffer const &copy);
+    VertexBuffer &operator=(VertexBuffer const &vertexbuffer);
+	void init();
+	void pushBuffer(char *data, size_t size);
+	void popBuffer();
+	void clearBuffer();
+	void transferGPU() const;
   };
 }
 
